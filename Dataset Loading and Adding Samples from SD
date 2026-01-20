@@ -1,0 +1,136 @@
+##################
+# LOADING DATASET
+##################
+
+import os
+import matplotlib.pyplot as plt
+
+# Define the dataset path
+dataset_path = './Detect_solar_dust'
+
+# Define class folders
+classes = ['Clean', 'Dusty']
+
+# Count images
+image_counts = {}
+for cls in classes:
+    class_path = os.path.join(dataset_path, cls)
+    image_files = [f for f in os.listdir(class_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
+    image_counts[cls] = len(image_files)
+
+# Print counts
+print("Image counts per class:")
+for cls, count in image_counts.items():
+    print(f"{cls}: {count}")
+
+# Assign colors (one per class)
+colors = ['#1f77b4', '#ff7f0e']  # Clean → blue, Dusty → orange
+
+# Plot bar chart
+plt.figure(figsize=(6, 4))
+plt.bar(image_counts.keys(), image_counts.values(), color=colors)
+plt.xlabel('Class')
+plt.ylabel('Number of Images')
+plt.title('Number of Images per Class')
+plt.show()
+
+#####################################
+# TAKING ONLY 150 DIRTY/DUSTY SAMPLE
+#####################################
+
+import os
+import matplotlib.pyplot as plt
+
+# Define the dataset path
+dataset_path = './Detect_solar_dust'
+
+# Define class folders
+classes = ['Clean', 'Dusty']
+
+# Initialize image count dictionary
+image_counts = {}
+
+for cls in classes:
+    class_path = os.path.join(dataset_path, cls)
+    image_files = [f for f in os.listdir(class_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
+    
+    if cls == 'Dusty':
+        # Take 30 images from Dusty
+        selected_files = image_files[:150]
+        image_counts[cls] = len(selected_files)
+    else:
+        # Take 150 images from Clean
+        selected_files = image_files[:750]
+        image_counts[cls] = len(selected_files)
+
+# Print counts
+print("Selected image counts per class:")
+for cls, count in image_counts.items():
+    print(f"{cls}: {count}")
+
+# Assign colors (unique for each class)
+colors = ['#1f77b4', '#ff7f0e']  # Clean → blue, Dusty → orange
+
+# Plot bar chart
+plt.figure(figsize=(6, 4))
+plt.bar(image_counts.keys(), image_counts.values(), color=colors)
+plt.xlabel('Class')
+plt.ylabel('Number of Images')
+plt.title('Number of Images per Class')
+#plt.savefig('image_counts_per_class.png')
+plt.show()
+
+###########################################################
+# ADDING SAMPLES FROM STABLE DIFFUSION FOR PARTIAL BALANCE
+###########################################################
+
+import os
+import matplotlib.pyplot as plt
+
+# Define the dataset paths
+dataset_path = './Detect_solar_dust'
+generated_path = r'D:\Raj Kumar\Hybrid Augmentation Approach\generated_solar_faults'
+
+# Define class folders
+classes = ['Clean', 'Dusty']
+
+# Initialize image count dictionary
+image_counts = {}
+
+# Process Clean and Dusty classes
+for cls in classes:
+    class_path = os.path.join(dataset_path, cls)
+    image_files = [f for f in os.listdir(class_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
+    
+    if cls == 'Dusty':
+        # Take 30 original Dusty images
+        selected_dusty_files = image_files[:150]
+                
+        # Count 60 generated images
+        generated_files = [f for f in os.listdir(generated_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
+        selected_generated_files = generated_files[:300]
+        
+        total_dusty = len(selected_dusty_files) + len(selected_generated_files)
+        image_counts[cls] = total_dusty
+    else:
+        # Take 150 Clean images
+        selected_clean_files = image_files[:750]
+        image_counts[cls] = len(selected_clean_files)
+
+# Print counts
+print("Final image counts per class:")
+for cls, count in image_counts.items():
+    print(f"{cls}: {count}")
+    
+# Assign colors (unique for each class)
+colors = ['#1f77b4', '#ff7f0e']  # Clean → blue, Dusty → orange
+
+# Plot bar chart
+plt.figure(figsize=(6, 4))
+plt.bar(image_counts.keys(), image_counts.values(), color=colors)
+plt.xlabel('Class')
+plt.ylabel('Number of Images')
+plt.title('Number of Images per Class (Dusty: 30 Original + 60 Generated)')
+#plt.savefig('image_counts_per_class.png')
+plt.show()
+
